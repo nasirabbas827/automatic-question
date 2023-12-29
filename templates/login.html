@@ -1,0 +1,23 @@
+<!-- student_login.html -->
+{% extends 'base.html' %}
+
+{% block title %}Student Login{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title">Student Login</h2>
+
+            <form method="post" action="{% url 'student_login' %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

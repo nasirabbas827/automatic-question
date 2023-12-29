@@ -1,0 +1,48 @@
+<!-- generated_paper.html -->
+{% extends 'base.html' %}
+
+{% block title %}Generated Paper - {{ course.CourseName }} (Difficulty Level: {{ difficulty_level }}){% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <h2>Generated Paper - {{ course.CourseName }} (Difficulty Level: {{ difficulty_level }})</h2>
+
+    <form action="{% url 'download_paper' course_id=course.CourseID difficulty_level=difficulty_level %}" method="post">
+        {% csrf_token %}
+        {% for item in questions %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <p class="card-text">{{ item.question.QuestionText }} (Weightage: {{ item.question.Weightage }} Marks)</p>
+                    <ul class="list-group">
+                        {% for option in item.options %}
+                            <li class="list-group-item">
+                                <label>
+                                    <input type="radio" name="question_{{ item.question.QuestionID }}_answer" value="{{ option }}">
+                                    {{ option }}
+                                </label>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endfor %}
+
+        <!-- Add a button to download the paper in docx format -->
+        <button type="submit" class="float-right btn btn-primary">Download Paper (Docx)</button>
+    </form>
+
+    <!-- Add a new form for paper submission -->
+    <form action="{% url 'submit_paper' course_id=course.CourseID difficulty_level=difficulty_level %}" method="post" enctype="multipart/form-data" class="mt-4 mb-5">
+        {% csrf_token %}
+        <h2 class="mt-5">Submit Your Paper Here</h2>
+        <div class="form-group">
+            <label for="file">Submit Paper (Docx):</label>
+            <input type="file" name="file" class="form-control-file" required>
+        </div>
+        <button type="submit" class="btn btn-success">Submit Paper</button>
+    </form>
+
+</div>
+
+{% endblock %}

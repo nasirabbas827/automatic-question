@@ -1,0 +1,46 @@
+<!-- view_submitted_papers.html -->
+{% extends 'base.html' %}
+
+{% block title %}View Submitted Papers{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <h2>Your Marked Papers</h2>
+
+    {% if submissions %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Course</th>
+                    <th scope="col">Difficulty Level</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Marks</th>
+                    <th scope="col">Grade</th>
+                    <th scope="col">Download Paper</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for submission in submissions %}
+                    {% if submission.Status == 'Marked' %}
+                        <tr>
+                            <td>{{ submission.Course.CourseName }}</td>
+                            <td>{{ submission.DifficultyLevel }}</td>
+                            <td>{{ submission.Status }}</td>
+                            <td>{% if submission.Marks %}{{ submission.Marks }}{% endif %}</td>
+                            <td>{% if submission.Grade %}{{ submission.Grade }}{% endif %}</td>
+                            <td>
+                                <a href="{% url 'download_submitted_paper' submission_id=submission.SubmissionID %}" class="btn btn-primary">Download</a>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No marked papers found.</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

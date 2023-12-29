@@ -1,0 +1,25 @@
+<!-- course_details.html -->
+{% extends 'base.html' %}
+
+{% block title %}{{ course.CourseName }} - Difficulty Levels{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <h2>{{ course.CourseName }} - Difficulty Levels</h2>
+
+    <div class="row">
+        <div class="col-md-4">
+            <a href="{% url 'generate_paper' course_id=course.CourseID difficulty_level='Easy' %}" class="btn btn-primary btn-block">Easy</a>
+        </div>
+        <div class="col-md-4">
+            <a href="{% url 'generate_paper' course_id=course.CourseID difficulty_level='Medium' %}" class="btn btn-primary btn-block">Medium</a>
+        </div>
+        <div class="col-md-4">
+            <a href="{% url 'generate_paper' course_id=course.CourseID difficulty_level='Difficult' %}" class="btn btn-primary btn-block">Difficult</a>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
