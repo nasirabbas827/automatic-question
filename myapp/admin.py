@@ -1,7 +1,9 @@
 # admin.py
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import DegreeProgram, Course, Question, Student, PaperSubmission
+from .models import DegreeProgram, Course, Question, Student, PaperSubmission , Teacher
+
+admin.site.register(Teacher)
 
 @admin.register(DegreeProgram)
 class DegreeProgramAdmin(admin.ModelAdmin):

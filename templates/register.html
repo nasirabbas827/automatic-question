@@ -1,4 +1,3 @@
-<!-- registration_form.html -->
 {% extends 'base.html' %}
 
 {% block title %}Register{% endblock %}
@@ -12,7 +11,37 @@
 
             <form method="post" action="{% url 'register_student' %}">
                 {% csrf_token %}
-                {{ form.as_p }}
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.Username.id_for_label }}">Username:</label>
+                            {{ form.Username }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.Password.id_for_label }}">Password:</label>
+                            {{ form.Password }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.Email.id_for_label }}">Email:</label>
+                            {{ form.Email }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.DegreeProgramID.id_for_label }}">Degree Program:</label>
+                            {{ form.DegreeProgramID }}
+                        </div>
+                    </div>
+                </div>
+
                 <button type="submit" class="btn btn-primary">Register</button>
             </form>
 
