@@ -58,8 +58,16 @@ class Question(models.Model):
         return self.QuestionText
 
 
-    
-# models.py
+
+class Notification(models.Model):
+    title = models.CharField(max_length=100)
+    message = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.title}'
+
+
 class PaperSubmission(models.Model):
     SubmissionID = models.AutoField(primary_key=True)
     Student = models.ForeignKey(Student, on_delete=models.CASCADE)

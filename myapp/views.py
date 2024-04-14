@@ -111,24 +111,28 @@ def generate_paper(request, course_id, difficulty_level):
     return render(request, 'generated_paper.html', {'course': course, 'difficulty_level': difficulty_level, 'questions': questions_with_options, 'student': student})
 
 
-def choose_questions(questions):
-    # Set the total marks for the paper
-    total_marks = 100
+import random
+from io import BytesIO
+from docx import Document
+from django.http import HttpResponse
+from .models import Course, Question
 
+def choose_questions(questions):
     # Create a list of question weights based on their weightage
     question_weights = [question.Weightage for question in questions]
 
-    # Choose random questions based on their weightage until the total marks reach 100
+    # Choose random questions based on their weightage until the total weight reaches 100
     selected_questions = []
-    while total_marks > 0:
+    total_weight = 0
+    while total_weight < 100:
         # Choose a question based on its weightage
-        chosen_question = choices(questions, weights=question_weights, k=1)[0]
+        chosen_question = random.choices(questions, weights=question_weights, k=1)[0]
 
         # Add the chosen question to the list
         selected_questions.append(chosen_question)
 
-        # Deduct the question's weightage from the total marks
-        total_marks -= chosen_question.Weightage
+        # Update the total weight
+        total_weight += chosen_question.Weightage
 
     return selected_questions
 
@@ -140,12 +144,15 @@ def download_paper(request, course_id, difficulty_level):
     # Retrieve questions based on the selected difficulty level and course
     questions = Question.objects.filter(CourseID=course, DifficultyLevel=difficulty_level)
 
+    # Choose questions for the paper
+    selected_questions = choose_questions(questions)
+
     # Create a Word document
     document = Document()
     document.add_heading(f'{course.CourseName} - {difficulty_level} Difficulty', level=1)
 
     # Add questions to the document
-    for question in questions:
+    for question in selected_questions:
         document.add_paragraph(question.QuestionText, style='Heading1')
         document.add_paragraph('Options:')
         for option in [question.Option1, question.Option2, question.Option3, question.Option4]:
@@ -162,6 +169,7 @@ def download_paper(request, course_id, difficulty_level):
     response['Content-Disposition'] = f'attachment; filename={course.CourseName}_{difficulty_level}_Paper.docx'
 
     return response
+
 
 # views.py
 
@@ -220,9 +228,6 @@ def download_submitted_paper(request, submission_id):
     # Retrieve the submitted paper
     submission = get_object_or_404(PaperSubmission, SubmissionID=submission_id)
 
-    # Ensure the user can only download their own papers (optional, depending on your requirements)
-    # if submission.Student != request.user.student:
-    #     return HttpResponseForbidden("You don't have permission to download this paper.")
 
     # Get the file content
     file_content = submission.File.read()
@@ -235,6 +240,23 @@ def download_submitted_paper(request, submission_id):
 
     return response
 
+
+
+from django.shortcuts import render
+from .models import Notification
+
+def view_notifications(request):
+    # Get all notifications for the current user
+    notifications = Notification.objects.all()
+
+    # Pass the notifications to the template
+    context = {
+        'notifications': notifications
+    }
+    return render(request, 'notifications.html', context)
+
+
+
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 
@@ -242,3 +264,4 @@ def logout_view(request):
     # Use Django's logout function to log the user out
     logout(request)
     return redirect('student_login')  # Replace 'student_login' with the actual URL name for your login view
+

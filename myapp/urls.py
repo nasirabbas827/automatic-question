@@ -14,7 +14,8 @@ urlpatterns = [
     path('submit-paper/<int:course_id>/<str:difficulty_level>/', views.submit_paper, name='submit_paper'),
     path('view_submitted_papers/', views.view_submitted_papers, name='view_submitted_papers'),
 path('download_submitted_paper/<int:submission_id>/', views.download_submitted_paper, name='download_submitted_paper'),
-path('logout/', views.logout_view, name='logout'),  # Redirect to the login page after logout
+path('notifications/', views.view_notifications, name='view_notifications'),
+path('logout/', views.logout_view, name='logout'), 
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
